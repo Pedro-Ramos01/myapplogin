@@ -8,8 +8,8 @@ export default function Index(){
                 source={require('@/assets/image1.png')}
                 style={styles.ilustration} 
             />
-            <Input />
-            <Input />
+            <Input placeholder="E-mail" keyboardType="email-address" />
+            <Input placeholder="Senha" secureTextEntry/>
             <Text>Não tem uma conta? Cadastre-se aqui</Text>
         </View>
     )
@@ -36,5 +36,6 @@ const styles = StyleSheet.create({
         color:"#0929b8",
         fontWeight:700
 
-    }
+    },
+
 })
