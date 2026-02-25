@@ -2,9 +2,15 @@ import { Button } from "@/components/Button";
 import { Input } from "@/components/Input";
 
 import { Link } from "expo-router";
+import { useState } from "react";
 import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
 
 export default function signup(){
+    const [email, setEmail] = useState("");
+    const [senha, setSenha] = useState("");
+    const [Comfirmasenha, setComfirmaSenha] = useState("");
+    const [nome, setNome] = useState("");
+
     return(
         <ScrollView contentContainerStyle={{ flexGrow:1 }}>
             <View style={styles.container}>
@@ -15,10 +21,10 @@ export default function signup(){
                 <Text style={styles.title}>Cadastrar</Text>
                 <Text style={styles.subtitle}>Crie sua conta para acessar</Text>
                 <View style={styles.form}>
-                    <Input placeholder="Nome"/>
-                    <Input placeholder="E-mail" keyboardType="email-address" />
-                    <Input placeholder="Senha" secureTextEntry/>
-                    <Input placeholder="Comfirme sua senha" secureTextEntry/>
+                    <Input placeholder="Nome" onChangeText={setNome}/>
+                    <Input placeholder="E-mail" keyboardType="email-address" onChangeText={setEmail} />
+                    <Input placeholder="Senha" secureTextEntry onChangeText={setSenha}/>
+                    <Input placeholder="Comfirme sua senha" secureTextEntry onChangeText={setComfirmaSenha}/>
                     <Button label="Cadastrar" />
                     {/* <Button label="Entrar" style={{ backgroundColor: "green"}}/> */}
                 </View>
