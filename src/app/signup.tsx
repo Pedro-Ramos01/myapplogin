@@ -5,6 +5,12 @@ import { Link } from "expo-router";
 import { useState } from "react";
 import { Alert, Image, ScrollView, StyleSheet, Text, View } from "react-native";
 
+import { auth } from "@/lib/firebase";
+import {
+    createUserWithEmailAndPassword
+} from "firebase/auth";
+
+
 export default function signup(){
 
     const [email, setEmail] = useState("");
@@ -55,6 +61,17 @@ export default function signup(){
 
     }
 
+    async function handleRegister(){
+    try {
+      console.log("Register -> ", email.trim());
+      const create = await createUserWithEmailAndPassword(auth, email.trim(), senha);
+      console.log("Register Ok uid: ", create.user.uid);
+      Alert.alert("Conta criada com sucesso", create.user.email ?? "");
+    } catch (error) {
+      console.log("Register failed ", error);      
+    }
+  }
+
  
 
     return(
@@ -85,7 +102,7 @@ export default function signup(){
 
                     <Input placeholder="Comfirme sua senha" secureTextEntry onChangeText={setComfirmaSenha}/>
 
-                    <Button label="Cadastrar" onPress={() => {{verificationPassword()}{verificationEmail()}}}/>
+                    <Button label="Cadastrar" onPress={() => {{verificationPassword()}{verificationEmail()}{handleRegister()}}}/>
 
                     {/* <Button label="Entrar" style={{ backgroundColor: "green"}}/> */}
 

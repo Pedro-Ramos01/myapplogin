@@ -6,14 +6,28 @@ import { Alert, Image, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, T
 
 import { useState } from "react";
 
+import { auth } from "@/lib/firebase";
+import {
+    signInWithEmailAndPassword
+} from "firebase/auth";
+
+
+
+
 export default function Index(){
     const [email, setEmail] = useState("");
     const [senha, setSenha] = useState("");
 
-    function handleSignIn(){
-        console.log(email)
-        Alert.alert("Entrar", "Preencha e-mail e senha para entrar!")
+    async function handleLogin() {
+    try {
+      console.log("Login --> ", email.trim());
+      const logged = await signInWithEmailAndPassword(auth, email.trim(), senha);
+      console.log("LOGIN OK uid: ", logged.user.uid);
+      Alert.alert("Login Ok ", logged.user.email ?? "");
+    } catch (error) {
+      console.log("Login failed ", error);  
     }
+  }
     return(
         <KeyboardAvoidingView
             style={{flex:1}}
@@ -40,7 +54,7 @@ export default function Index(){
                             secureTextEntry 
                             onChangeText={setSenha}
                             />
-                        <Button label="Entrar" onPress={handleSignIn}/>
+                        <Button label="Entrar" onPress={handleLogin}/>
                         {/* <Button label="Entrar" style={{ backgroundColor: "green"}}/> */}
                     </View>
                     <Text style={styles.footerText}>Não tem uma conta? 
