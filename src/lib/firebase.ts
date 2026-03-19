@@ -1,8 +1,7 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
+// lib/firebase.ts
 import { getApp, getApps, initializeApp } from "firebase/app";
-import { getAuth, initializeAuth } from "firebase/auth";
+import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
-//import { getReactNativePersistence } from "firebase/auth/react-native";
 
 const firebaseConfig = {
   apiKey: process.env.EXPO_PUBLIC_FIREBASE_API_KEY,
@@ -12,31 +11,9 @@ const firebaseConfig = {
   messagingSenderId: process.env.EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
   appId: process.env.EXPO_PUBLIC_FIREBASE_APP_ID,
 };
-console.log("FIREBASE CONFIG ",firebaseConfig);
-//bloco1
-export const app = getApps().length ? getApp() : initializeApp(firebaseConfig)
 
-const getRNPersistence = () =>{
-    try {
-        //
-        const rn = require("firebase/auth/react-native")
-        return rn.getReactNativePersistence;
-    } catch {
-        // fallback: tenta pegar do auth normal (se não existir)
-        const auth = require("firebase/auth");
-        return auth.getReactNativePersistence;
-    }
-}
-//bloco2             
-export const auth = ( () =>{
-    try {
-        const getReactNativePersistence = getRNPersistence()
-        return initializeAuth(app, {
-            persistence: getReactNativePersistence(AsyncStorage)
-        });
-    } catch (error) {
-        return getAuth(app)
-    }
-})();
-//bloco3
+export const app =
+  getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
+
+export const auth = getAuth(app);
 export const db = getFirestore(app);
