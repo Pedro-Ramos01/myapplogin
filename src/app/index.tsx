@@ -3,14 +3,14 @@ import { Input } from "@/components/Input";
 
 import { Link, useRouter } from "expo-router";
 import {
-    Alert,
-    Image,
-    KeyboardAvoidingView,
-    Platform,
-    ScrollView,
-    StyleSheet,
-    Text,
-    View,
+  Alert,
+  Image,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
 } from "react-native";
 
 import { auth } from "@/lib/firebase";
@@ -21,6 +21,29 @@ export default function Index() {
   const router = useRouter();
   const [email, setEmail] = useState<string>("");
   const [senha, setSenha] = useState<string>("");
+
+  function getFirebaseAuthErrorMessage(error: any): string {
+    const code = error?.code ?? "";
+
+    switch (code) {
+      case "auth/invalid-credential":
+        return "E-mail ou senha incorretos. Verifique seus dados e tente novamente.";
+      case "auth/user-not-found":
+        return "Usuário não encontrado. Verifique se o e-mail está correto ou cadastre-se.";
+      case "auth/wrong-password":
+        return "Senha incorreta. Tente novamente.";
+      case "auth/invalid-email":
+        return "O e-mail informado é inválido.";
+      case "auth/user-disabled":
+        return "Esta conta foi desativada. Entre em contato com o suporte.";
+      case "auth/too-many-requests":
+        return "Muitas tentativas de login. Tente novamente mais tarde.";
+      case "auth/network-request-failed":
+        return "Falha na conexão. Verifique sua internet e tente novamente.";
+      default:
+        return error?.message ?? "Erro desconhecido ao fazer login.";
+    }
+  }
 
   async function handleLogin() {
     try {
@@ -34,7 +57,7 @@ export default function Index() {
       router.replace("/home");
     } catch (error: any) {
       console.log("Erro no login: ", error);
-      Alert.alert("Erro ao entrar", error.message);
+      Alert.alert("Erro ao entrar", getFirebaseAuthErrorMessage(error));
     }
   }
 
