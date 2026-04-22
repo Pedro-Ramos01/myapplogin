@@ -1,23 +1,23 @@
 import { useRouter } from "expo-router";
 import { onAuthStateChanged, User } from "firebase/auth";
 import {
-    collectionGroup,
-    onSnapshot,
-    orderBy,
-    query,
-    Timestamp,
+  collection,
+  onSnapshot,
+  orderBy,
+  query,
+  Timestamp,
 } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import {
-    Alert,
-    FlatList,
-    Image,
-    KeyboardAvoidingView,
-    Platform,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
+  Alert,
+  FlatList,
+  Image,
+  KeyboardAvoidingView,
+  Platform,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
 
 import { auth, db } from "@/lib/firebase";
@@ -50,8 +50,12 @@ export default function Listagem() {
   }, [router]);
 
   useEffect(() => {
+    if (!user) {
+      return;
+    }
+
     const itemsQuery = query(
-      collectionGroup(db, "tenis"),
+      collection(db, "users", user.uid, "tenis"),
       orderBy("createdAt", "desc")
     );
 
@@ -73,12 +77,14 @@ export default function Listagem() {
       },
       (error) => {
         console.log("Erro ao listar itens:", error);
-        Alert.alert("Erro", "Não foi possível carregar a lista.");
+        if (items.length === 0) {
+          Alert.alert("Erro", "Não foi possível carregar a lista. Verifique sua conexão.");
+        }
       }
     );
 
     return unsubscribe;
-  }, []);
+  }, [user, items.length]);
 
   return (
     <KeyboardAvoidingView
